@@ -1,0 +1,5 @@
+export { createModalStore } from './store'
+export { trapFocus } from './focus-trap'
+export { isBackdropClick } from './backdrop'
+export { lockScroll, unlockScroll } from './scroll-lock'
+export type { ModalConfig, ModalInstance, ModalStore } from './types'
