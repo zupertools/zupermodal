@@ -195,12 +195,15 @@ function ModalRenderer({
     node.close()
   }, [instance])
 
-  function handleClose() {
+  function handleClose(e: SyntheticEvent<HTMLDialogElement>) {
     // The single point where every close resolves the open() promise.
+    if (e.target !== e.currentTarget) return
     store.finalizeClose(id)
   }
 
   function handleCancel(e: SyntheticEvent) {
+    if (e.target !== e.currentTarget) return
+
     e.preventDefault()
     if (instance?.config.closeOnEsc === false) return
     void requestNativeClose(undefined)
@@ -215,6 +218,7 @@ function ModalRenderer({
   function handleSubmit(e: SubmitEvent<HTMLDialogElement>) {
     const form = e.target as HTMLFormElement
     if (form.method !== 'dialog') return
+    if (form.closest('dialog') !== e.currentTarget) return
 
     // Intercept method="dialog" form submissions
     e.preventDefault()
