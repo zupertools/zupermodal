@@ -2,9 +2,9 @@ import type { SubmitEvent, MouseEvent, RefObject, SyntheticEvent } from 'react'
 
 export interface BindProps {
   ref: RefObject<HTMLDialogElement | null>
-  onClose: () => void
-  onCancel: (e: SyntheticEvent) => void
-  onClick: (e: MouseEvent) => void
+  onClose: (e: SyntheticEvent<HTMLDialogElement>) => void
+  onCancel: (e: SyntheticEvent<HTMLDialogElement>) => void
+  onClick: (e: MouseEvent<HTMLDialogElement>) => void
   // Intercepts <form method="dialog"> submissions inside the dialog so
   // they go through the requestClose -> (optional transition) -> close
   // pipeline.
