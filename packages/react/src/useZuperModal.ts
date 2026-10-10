@@ -12,10 +12,34 @@ import { useModalStoreContext } from './context'
 import { CloseRegistryContext, useRegistrationContext } from './provider'
 import type { RenderArgs } from './types'
 
+type RenderFn<TData, TResult> = (args: RenderArgs<TData, TResult>) => ReactNode
+
+interface UseZuperModalResult<TData, TResult> {
+  openModal: (data: TData) => Promise<TResult>
+  closeModal: (result?: TResult) => void
+  isOpen: boolean
+}
+
+export function useZuperModal<TData = void, TResult = void>(
+  render: RenderFn<TData, TResult>,
+): UseZuperModalResult<TData, TResult>
 export function useZuperModal<TData = void, TResult = void>(
   config: ModalConfig,
-  render: (args: RenderArgs<TData, TResult>) => ReactNode,
-) {
+  render: RenderFn<TData, TResult>,
+): UseZuperModalResult<TData, TResult>
+export function useZuperModal<TData = void, TResult = void>(
+  configOrRender: ModalConfig | RenderFn<TData, TResult>,
+  maybeRender?: RenderFn<TData, TResult>,
+): UseZuperModalResult<TData, TResult> {
+  const config: ModalConfig =
+    typeof configOrRender === 'function' ? {} : configOrRender
+  const render =
+    typeof configOrRender === 'function' ? configOrRender : maybeRender
+
+  if (!render) {
+    throw new Error('[zupermodal] useZuperModal() requires a render function.')
+  }
+
   const store = useModalStoreContext()
   const { registerDefinition, unregisterDefinition } = useRegistrationContext()
   const closeRegistry = useContext(CloseRegistryContext)
